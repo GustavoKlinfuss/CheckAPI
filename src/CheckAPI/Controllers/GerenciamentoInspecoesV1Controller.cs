@@ -1,5 +1,5 @@
 ﻿using CheckAPI.Application.Base;
-using CheckAPI.Application.Commands;
+using CheckAPI.Application.Commands.ConfiguracoesInspecao;
 using CheckAPI.DataContracts.ConfiguracaoInspecoes;
 using CheckAPI.Domain.Configuracoes;
 using CheckAPI.Infrastructure;
@@ -21,7 +21,9 @@ namespace CheckAPI.Controllers
 
             return result.Sucesso
                 ? Created(result.Dados!.Id.ToString(), result)
-                : UnprocessableEntity(result);
+                : result.Erros?.FirstOrDefault()?.Codigo == CommonErrors.ERRO_VALIDACAO
+                    ? BadRequest(result)
+                    : UnprocessableEntity(result);
         }
 
         [HttpGet("{id}")]
@@ -30,7 +32,7 @@ namespace CheckAPI.Controllers
             var configuracaoInspecao = await context.Set<ConfiguracaoInspecao>().Include(x => x.Inspecionaveis).FirstOrDefaultAsync(x => x.Id == id);
 
             if (configuracaoInspecao is null)
-                return NotFound(new BaseResult<View>(new List<CommandExecutionError> { new("NÃO ENCONTRADO", "O registro não foi encontrado") }));
+                return NotFound(new BaseResult<View>(new List<CommandExecutionError> { new(CommonErrors.REGISTRO_NAO_ENCONTRADO, "O registro não foi encontrado") }));
 
             return Ok(new BaseResult<ObterDetalhesConfiguracaoInspecaoV1View>(new ObterDetalhesConfiguracaoInspecaoV1View(configuracaoInspecao.Id)));
         }
@@ -46,16 +48,37 @@ namespace CheckAPI.Controllers
             return Ok(new BaseResult<ObterConfiguracoesInspecaoV1View>(view));
         }
 
-        [HttpPatch("{id}/inspecionavel")]
-        public IActionResult AdicionarInspecionavel(Guid? id)
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Remover(Guid id)
         {
-            return Ok();
+            var command = new RemoverConfiguracaoInspecaoCommand(id);
+            var result = await _mediator.Send(command);
+
+            return result.Sucesso
+                ? NoContent()
+                : result.Erros?.FirstOrDefault()?.Codigo == CommonErrors.ERRO_VALIDACAO
+                    ? BadRequest(result)
+                    : UnprocessableEntity(result);
         }
 
-        [HttpDelete("{id}")]
-        public IActionResult Remover(Guid? id)
+        [HttpPatch("{id}/inspecionavel")]
+        public async Task<IActionResult> AdicionarInspecionavel(Guid id, AdicionarInspecionavelV1Request request)
         {
-            return Ok();
+            var command = new AdicionarInspecionavelCommand(
+                id,
+                request.Titulo,
+                request.Descricao,
+                request.Opcoes.Select(x => new AdicionarInspecionavelCommand.Opcao(x.Titulo)),
+                request.TipoPreenchimento,
+                request.ConfiguracaoObservacao
+                );
+            var result = await _mediator.Send(command);
+
+            return result.Sucesso
+                ? Created(result.Dados!.Id.ToString(), result)
+                : result.Erros?.FirstOrDefault()?.Codigo == CommonErrors.ERRO_VALIDACAO
+                    ? BadRequest(result)
+                    : UnprocessableEntity(result);
         }
     }
 }

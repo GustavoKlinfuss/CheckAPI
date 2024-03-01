@@ -1,6 +1,6 @@
 ﻿using CheckAPI.Application.Base;
 
-namespace CheckAPI.Application.Commands.Views
+namespace CheckAPI.Application.Commands.ConfiguracoesInspecao.Views
 {
     public class IniciarConfiguracaoInspecaoView(Guid id, DateTime dataCadastro, string nome) : View
     {

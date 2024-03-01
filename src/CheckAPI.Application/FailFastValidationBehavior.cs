@@ -30,7 +30,7 @@ namespace CheckAPI.Application
 
         private static Task<TResponse> FormatErrorsToResponse(IEnumerable<ValidationFailure> failures)
         {
-            BaseResult<View> response = new(failures.Select(x => new CommandExecutionError("VALIDACAO_CAMPOS", x.ErrorMessage)));
+            BaseResult<View> response = new(failures.Select(x => new CommandExecutionError(CommonErrors.ERRO_VALIDACAO, x.ErrorMessage)));
 
             return Task.FromResult((response as TResponse)!);
         }

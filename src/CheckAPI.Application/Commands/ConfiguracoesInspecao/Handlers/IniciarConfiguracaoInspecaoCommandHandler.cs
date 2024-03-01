@@ -1,10 +1,10 @@
 ﻿using CheckAPI.Application.Base;
-using CheckAPI.Application.Commands.Views;
+using CheckAPI.Application.Commands.ConfiguracoesInspecao.Views;
 using CheckAPI.Domain.Configuracoes;
 using CheckAPI.Infrastructure;
 using MediatR;
 
-namespace CheckAPI.Application.Commands.Handlers
+namespace CheckAPI.Application.Commands.ConfiguracoesInspecao.Handlers
 {
     public class IniciarConfiguracaoInspecaoCommandHandler(CheckAPIContext context) : IRequestHandler<IniciarConfiguracaoInspecaoCommand, BaseResult<IniciarConfiguracaoInspecaoView>>
     {
@@ -14,7 +14,7 @@ namespace CheckAPI.Application.Commands.Handlers
 
             await context.Set<ConfiguracaoInspecao>().AddAsync(configuracaoInspecao, cancellationToken);
             await context.SaveChangesAsync(cancellationToken);
-            
+
             var view = CriarView(configuracaoInspecao);
 
             return new BaseResult<IniciarConfiguracaoInspecaoView>(view);
@@ -22,8 +22,8 @@ namespace CheckAPI.Application.Commands.Handlers
 
         private static IniciarConfiguracaoInspecaoView CriarView(ConfiguracaoInspecao configuracaoInspecao)
             => new(
-                id: configuracaoInspecao.Id, 
-                dataCadastro: configuracaoInspecao.DataCadastro, 
+                id: configuracaoInspecao.Id,
+                dataCadastro: configuracaoInspecao.DataCadastro,
                 nome: configuracaoInspecao.Nome);
     }
 }
