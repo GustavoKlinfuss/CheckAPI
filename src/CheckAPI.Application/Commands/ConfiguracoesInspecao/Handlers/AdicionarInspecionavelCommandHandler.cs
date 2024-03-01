@@ -22,7 +22,6 @@ namespace CheckAPI.Application.Commands.ConfiguracoesInspecao.Handlers
             var inspecionavel = new Inspecionavel(request.Titulo, request.Descricao, request.TipoPreenchimento, request.ConfiguracaoObservacao);
             configuracaoInspecao.Adicionar(inspecionavel);
 
-            _context.Add(inspecionavel);
             await _context.SaveChangesAsync(cancellationToken);
 
             return new BaseResult(new AdicionarInspecionavelView(inspecionavel.Id));

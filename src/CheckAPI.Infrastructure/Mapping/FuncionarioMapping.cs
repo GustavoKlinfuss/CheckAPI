@@ -15,7 +15,8 @@ namespace CheckAPI.Infrastructure.Mapping
             builder
                 .Property(x => x.Id)
                 .HasColumnName("id")
-                .HasColumnType("UNIQUEIDENTIFIER");
+                .HasColumnType("UNIQUEIDENTIFIER")
+                .ValueGeneratedNever();
 
             builder
                 .Property(x => x.DataCadastro)
