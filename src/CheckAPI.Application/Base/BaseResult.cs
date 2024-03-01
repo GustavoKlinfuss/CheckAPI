@@ -1,0 +1,25 @@
+﻿namespace CheckAPI.Application.Base
+{
+    public class BaseResult<T> where T : View
+    {
+        public bool Sucesso => Erros is null;
+        public IEnumerable<CommandExecutionError>? Erros { get; set; }
+        public T? Dados { get; set; }
+
+        public BaseResult(T dados)
+        {
+            Dados = dados;
+        }
+
+        public BaseResult(IEnumerable<CommandExecutionError> erros)
+        {
+            Erros = erros;
+        }
+    }
+
+    public class CommandExecutionError(string codigo, string mensagem)
+    {
+        public string Codigo { get; set; } = codigo;
+        public string Mensagem { get; set; } = mensagem;
+    }
+}
