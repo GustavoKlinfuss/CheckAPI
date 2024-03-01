@@ -6,9 +6,9 @@ using MediatR;
 
 namespace CheckAPI.Application.Commands.ConfiguracoesInspecao.Handlers
 {
-    public class IniciarConfiguracaoInspecaoCommandHandler(CheckAPIContext context) : IRequestHandler<IniciarConfiguracaoInspecaoCommand, BaseResult<IniciarConfiguracaoInspecaoView>>
+    public class IniciarConfiguracaoInspecaoCommandHandler(CheckAPIContext context) : IRequestHandler<IniciarConfiguracaoInspecaoCommand, BaseResult>
     {
-        public async Task<BaseResult<IniciarConfiguracaoInspecaoView>> Handle(IniciarConfiguracaoInspecaoCommand request, CancellationToken cancellationToken)
+        public async Task<BaseResult> Handle(IniciarConfiguracaoInspecaoCommand request, CancellationToken cancellationToken)
         {
             var configuracaoInspecao = new ConfiguracaoInspecao(request.Nome);
 
@@ -17,7 +17,7 @@ namespace CheckAPI.Application.Commands.ConfiguracoesInspecao.Handlers
 
             var view = CriarView(configuracaoInspecao);
 
-            return new BaseResult<IniciarConfiguracaoInspecaoView>(view);
+            return new BaseResult(view);
         }
 
         private static IniciarConfiguracaoInspecaoView CriarView(ConfiguracaoInspecao configuracaoInspecao)

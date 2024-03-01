@@ -1,11 +1,11 @@
 ﻿using CheckAPI.Application.Base;
-using CheckAPI.Application.Commands.ConfiguracoesInspecao.Views;
 using CheckAPI.Domain.Configuracoes.Entities;
 using MediatR;
 
 namespace CheckAPI.Application.Commands.ConfiguracoesInspecao
 {
-    public class AdicionarInspecionavelCommand(Guid aggregateId, string titulo, string descricao, IEnumerable<AdicionarInspecionavelCommand.Opcao> opcoes, ETipoPreenchimento tipoPreenchimento, EConfigObservacao configuracaoObservacao) : IRequest<BaseResult<AdicionarInspecionavelView>>
+    public class AdicionarInspecionavelCommand(Guid aggregateId, string titulo, string descricao, IEnumerable<AdicionarInspecionavelCommand.Opcao> opcoes, ETipoPreenchimento tipoPreenchimento, EConfigObservacao configuracaoObservacao)
+        : IRequest<BaseResult>
     {
         public Guid AggregateId { get; set; } = aggregateId;
 

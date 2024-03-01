@@ -1,12 +1,12 @@
 ﻿namespace CheckAPI.Application.Base
 {
-    public class BaseResult<T> where T : View
+    public class BaseResult
     {
         public bool Sucesso => Erros is null;
         public IEnumerable<CommandExecutionError>? Erros { get; set; }
-        public T? Dados { get; set; }
+        public object? Dados { get; set; }
 
-        public BaseResult(T dados)
+        public BaseResult(object dados)
         {
             Dados = dados;
         }

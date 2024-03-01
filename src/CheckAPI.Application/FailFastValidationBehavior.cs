@@ -6,7 +6,8 @@ using MediatR;
 namespace CheckAPI.Application
 {
     public class FailFastValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
-        where TRequest : IRequest<TResponse> where TResponse : BaseResult<View>
+        where TRequest : IRequest<TResponse>
+        where TResponse : BaseResult
     {
         private readonly IEnumerable<IValidator<TRequest>> _validators;
 
@@ -30,7 +31,7 @@ namespace CheckAPI.Application
 
         private static Task<TResponse> FormatErrorsToResponse(IEnumerable<ValidationFailure> failures)
         {
-            BaseResult<View> response = new(failures.Select(x => new CommandExecutionError(CommonErrors.ERRO_VALIDACAO, x.ErrorMessage)));
+            BaseResult response = new(failures.Select(x => new CommandExecutionError(CommonErrors.ERRO_VALIDACAO, x.ErrorMessage)));
 
             return Task.FromResult((response as TResponse)!);
         }

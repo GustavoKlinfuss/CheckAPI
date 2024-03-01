@@ -7,6 +7,8 @@ namespace CheckAPI.Application.Commands.ConfiguracoesInspecao.Validators
         public IniciarConfiguracaoInspecaoCommandValidator()
         {
             RuleFor(x => x.Nome)
+                .NotEmpty()
+                .WithMessage("O Nome é obrigatório.")
                 .MinimumLength(3)
                 .WithMessage("O Nome deve ter no mínimo 3 caracteres.")
                 .MaximumLength(50)

@@ -1,5 +1,6 @@
 ﻿using CheckAPI.Application.Base;
 using CheckAPI.Application.Commands.ConfiguracoesInspecao;
+using CheckAPI.Application.Commands.ConfiguracoesInspecao.Views;
 using CheckAPI.DataContracts.ConfiguracaoInspecoes;
 using CheckAPI.Domain.Configuracoes;
 using CheckAPI.Infrastructure;
@@ -19,11 +20,12 @@ namespace CheckAPI.Controllers
             var command = new IniciarConfiguracaoInspecaoCommand(request.Nome);
             var result = await _mediator.Send(command);
 
-            return result.Sucesso
-                ? Created(result.Dados!.Id.ToString(), result)
-                : result.Erros?.FirstOrDefault()?.Codigo == CommonErrors.ERRO_VALIDACAO
-                    ? BadRequest(result)
-                    : UnprocessableEntity(result);
+            if (result.Sucesso)
+                return Created((result.Dados as IniciarConfiguracaoInspecaoView)!.Id.ToString(), result);
+
+            return result.Erros?.FirstOrDefault()?.Codigo == CommonErrors.ERRO_VALIDACAO
+                ? BadRequest(result)
+                : UnprocessableEntity(result);
         }
 
         [HttpGet("{id}")]
@@ -32,9 +34,9 @@ namespace CheckAPI.Controllers
             var configuracaoInspecao = await context.Set<ConfiguracaoInspecao>().Include(x => x.Inspecionaveis).FirstOrDefaultAsync(x => x.Id == id);
 
             if (configuracaoInspecao is null)
-                return NotFound(new BaseResult<View>(new List<CommandExecutionError> { new(CommonErrors.REGISTRO_NAO_ENCONTRADO, "O registro não foi encontrado") }));
+                return NotFound(new BaseResult(new List<CommandExecutionError> { new(CommonErrors.REGISTRO_NAO_ENCONTRADO, "O registro não foi encontrado") }));
 
-            return Ok(new BaseResult<ObterDetalhesConfiguracaoInspecaoV1View>(new ObterDetalhesConfiguracaoInspecaoV1View(configuracaoInspecao.Id)));
+            return Ok(new BaseResult(new ObterDetalhesConfiguracaoInspecaoV1View(configuracaoInspecao.Id)));
         }
 
         [HttpGet]
@@ -45,7 +47,7 @@ namespace CheckAPI.Controllers
             var configuracoesViewListed = configuracaoInspecao.Select(x => new ObterConfiguracoesInspecaoV1View.ConfiguracaoInspecao(x.Id));
             var view = new ObterConfiguracoesInspecaoV1View(configuracoesViewListed);
 
-            return Ok(new BaseResult<ObterConfiguracoesInspecaoV1View>(view));
+            return Ok(new BaseResult(view));
         }
 
         [HttpDelete("{id}")]
@@ -75,7 +77,7 @@ namespace CheckAPI.Controllers
             var result = await _mediator.Send(command);
 
             return result.Sucesso
-                ? Created(result.Dados!.Id.ToString(), result)
+                ? Created((result.Dados as AdicionarInspecionavelView)!.Id.ToString(), result)
                 : result.Erros?.FirstOrDefault()?.Codigo == CommonErrors.ERRO_VALIDACAO
                     ? BadRequest(result)
                     : UnprocessableEntity(result);
