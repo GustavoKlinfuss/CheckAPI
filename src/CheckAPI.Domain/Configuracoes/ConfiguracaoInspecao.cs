@@ -13,7 +13,7 @@ namespace CheckAPI.Domain.Configuracoes
         }
 
         public string Nome { get; } = null!;
-        public ICollection<Inspecionavel> Inspecionaveis { get; } = new HashSet<Inspecionavel>();
+        public ICollection<Inspecionavel> Inspecionaveis { get; } = [];
 
         public void Adicionar(Inspecionavel inspecionavel)
         {

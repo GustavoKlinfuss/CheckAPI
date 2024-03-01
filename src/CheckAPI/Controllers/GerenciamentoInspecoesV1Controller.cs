@@ -36,13 +36,23 @@ namespace CheckAPI.Controllers
             if (configuracaoInspecao is null)
                 return NotFound(new BaseResult(new List<CommandExecutionError> { new(CommonErrors.REGISTRO_NAO_ENCONTRADO, "O registro não foi encontrado") }));
 
-            return Ok(new BaseResult(new ObterDetalhesConfiguracaoInspecaoV1View(configuracaoInspecao.Id)));
+            return Ok(
+                new BaseResult(
+                    new ObterDetalhesConfiguracaoInspecaoV1View(
+                        configuracaoInspecao.Id, 
+                        configuracaoInspecao.Nome, 
+                        configuracaoInspecao.Inspecionaveis.Select(x => new ObterDetalhesConfiguracaoInspecaoV1View.Inspecionavel(
+                            x.Id, 
+                            x.Titulo, 
+                            x.Descricao, 
+                            (int)x.TipoPreenchimento,
+                            (int)x.ConfigObservacao)))));
         }
 
         [HttpGet]
         public async Task<IActionResult> ObterConfiguracoes()
         {
-            var configuracaoInspecao = await context.Set<ConfiguracaoInspecao>().Include(x => x.Inspecionaveis).ToListAsync();
+            var configuracaoInspecao = await context.Set<ConfiguracaoInspecao>().ToListAsync();
 
             var configuracoesViewListed = configuracaoInspecao.Select(x => new ObterConfiguracoesInspecaoV1View.ConfiguracaoInspecao(x.Id));
             var view = new ObterConfiguracoesInspecaoV1View(configuracoesViewListed);
@@ -70,7 +80,6 @@ namespace CheckAPI.Controllers
                 id,
                 request.Titulo,
                 request.Descricao,
-                request.Opcoes.Select(x => new AdicionarInspecionavelCommand.Opcao(x.Titulo)),
                 request.TipoPreenchimento,
                 request.ConfiguracaoObservacao
                 );

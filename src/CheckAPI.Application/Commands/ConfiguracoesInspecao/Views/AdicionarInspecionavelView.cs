@@ -2,8 +2,8 @@
 
 namespace CheckAPI.Application.Commands.ConfiguracoesInspecao.Views
 {
-    public class AdicionarInspecionavelView : View
+    public class AdicionarInspecionavelView(Guid id) : View
     {
-        public Guid Id { get; set; }
+        public Guid Id { get; set; } = id;
     }
 }
