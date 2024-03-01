@@ -16,4 +16,8 @@
     <ProjectReference Include="..\CheckAPI.Application\CheckAPI.Application.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="DataContracts\Inspecoes\" />
+  </ItemGroup>
+
 </Project>

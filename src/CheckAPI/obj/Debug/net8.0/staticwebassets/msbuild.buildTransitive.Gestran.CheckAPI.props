@@ -1,3 +1,0 @@
-﻿<Project>
-  <Import Project="..\buildMultiTargeting\Gestran.CheckAPI.props" />
-</Project>

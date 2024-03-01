@@ -1,5 +1,6 @@
 ﻿namespace CheckAPI.DataContracts
 {
+    // TODO
     public class InspecaoV1Contracts
     {
         public record IniciarInspecaoV1Request(long Matricula, string Placa);
